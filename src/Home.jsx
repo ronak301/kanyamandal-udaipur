@@ -27,25 +27,25 @@ export const Destinations = [
     id: "2",
     name: "Muha Chota",
     left: 140,
-    top: 20,
+    top: 40,
   },
   {
     id: "3",
     name: "Badi Rawliya",
-    left: 60,
+    left: 360,
     top: 90,
   },
   {
     id: "4",
     name: "Royat",
-    left: 40,
+    left: 640,
     top: 60,
   },
   {
     id: "5",
     name: "Bidasar",
-    left: 10,
-    top: 80,
+    left: 480,
+    top: 200,
   },
   {
     id: "6",
@@ -56,26 +56,26 @@ export const Destinations = [
   {
     id: "7",
     name: "Ujjain",
-    left: 10,
-    top: 20,
+    left: "70%",
+    top: "80%",
   },
   {
     id: "8",
     name: "Chaapar",
-    left: 10,
-    top: 20,
+    left: 300,
+    top: 200,
   },
   {
     id: "9",
     name: "Laadnoo",
-    left: 10,
-    top: 20,
+    left: 160,
+    top: 260,
   },
   {
     id: "10",
     name: "Tamkor",
     left: 10,
-    top: 20,
+    top: 300,
   },
   {
     id: "11",
@@ -263,14 +263,16 @@ export default function Home() {
                   borderColor={"black"}
                   borderWidth={2}
                   justifyContent={"center"}
-                  w={24}
-                  h={24}
+                  w={20}
+                  h={20}
                   left={destination.left}
                   top={destination.top}
                   borderRadius={999}
                   backgroundColor={"#E5FFDE"}
                   alignItems={"center"}>
-                  <Text fontSize={12}>{destination?.name}</Text>
+                  <Text fontSize={10} fontWeight={"600"}>
+                    {destination?.name}
+                  </Text>
                   {isSelected ? (
                     <Box
                       position={"absolute"}
