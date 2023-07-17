@@ -1,8 +1,89 @@
-import { Box, Button, Image, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Image,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { isEmpty, map } from "lodash";
 import React from "react";
 import sample from "./assets/sample.mp3";
-import { CheckIcon } from "@chakra-ui/icons";
+import { CheckIcon, CheckCircleIcon } from "@chakra-ui/icons";
+
+export const Destinations = [
+  {
+    id: "1",
+    name: "Kantaliya",
+    left: 0,
+    top: 20,
+  },
+  {
+    id: "2",
+    name: "Muha Chota",
+    left: 140,
+    top: 20,
+  },
+  {
+    id: "3",
+    name: "Badi Rawliya",
+    left: 60,
+    top: 90,
+  },
+  {
+    id: "4",
+    name: "Royat",
+    left: 40,
+    top: 60,
+  },
+  {
+    id: "5",
+    name: "Bidasar",
+    left: 10,
+    top: 80,
+  },
+  {
+    id: "6",
+    name: "Jaipur",
+    left: "70%",
+    top: 10,
+  },
+  {
+    id: "7",
+    name: "Ujjain",
+    left: 10,
+    top: 20,
+  },
+  {
+    id: "8",
+    name: "Chaapar",
+    left: 10,
+    top: 20,
+  },
+  {
+    id: "9",
+    name: "Laadnoo",
+    left: 10,
+    top: 20,
+  },
+  {
+    id: "10",
+    name: "Tamkor",
+    left: 10,
+    top: 20,
+  },
+  {
+    id: "11",
+    name: "SardarShahar",
+    left: 10,
+    top: 40,
+  },
+];
 
 export const ALL_MUNI = [
   {
@@ -65,13 +146,34 @@ export const ALL_MUNI = [
 export default function Home() {
   const [selectedImage, setSelectedImage] = React.useState(null);
   const [selectedDestination, setSelectedDestination] = React.useState(null);
+  const [isCorrect, setIsCorrect] = React.useState(false);
+
+  React.useEffect(() => {
+    setSelectedDestination(null);
+    setSelectedImage(null);
+  }, [isCorrect]);
+
+  const {
+    isOpen: isVisible,
+    onClose,
+    onOpen,
+    isOpen,
+  } = useDisclosure({ defaultIsOpen: false });
 
   const sampleSong = new Audio(sample);
 
   console.log("selectedImage", selectedImage);
 
   const onClickImage = (muni) => {
-    setSelectedImage(muni?.id);
+    if (selectedImage === muni.id) {
+      setSelectedImage(null);
+    } else setSelectedImage(muni?.id);
+  };
+
+  const onClickDestination = (dest) => {
+    if (selectedDestination === dest.id) {
+      setSelectedDestination(null);
+    } else setSelectedDestination(dest?.id);
   };
 
   const enabledSubmitButton =
@@ -87,6 +189,30 @@ export default function Home() {
       paddingLeft={32}
       backgroundColor="#E1F8FF"
       paddingRight={32}>
+      {isVisible ? (
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            {isCorrect ? (
+              <ModalHeader>
+                <CheckCircleIcon w={4} h={4} color="green.500" mr={2} />
+                Great! Your Answer is Correct.
+              </ModalHeader>
+            ) : (
+              <ModalHeader>Sorry your answer is wrong!</ModalHeader>
+            )}
+            <ModalBody>
+              <Text>Thanks for participating!</Text>
+            </ModalBody>
+
+            <ModalFooter>
+              <Button colorScheme="blue" mr={3} onClick={onClose}>
+                Close
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      ) : null}
       <Box flexDirection={"column"}>
         <Box
           w="100%"
@@ -110,7 +236,7 @@ export default function Home() {
             </Button>
           </Box>
         </Box>
-        <Box>
+        <Box position={"relative"}>
           <Image
             objectFit="cover"
             src={require("./assets/map.jpeg")}
@@ -118,6 +244,52 @@ export default function Home() {
             h="55vh"
             mb={4}
           />
+          <Box
+            position={"absolute"}
+            left={0}
+            right={0}
+            top={0}
+            bottom={0}
+            backgroundColor={"rgba(0,0,0,0.5)"}>
+            {map(Destinations, (destination) => {
+              const isSelected = destination?.id === selectedDestination;
+              return (
+                <Box
+                  position={"absolute"}
+                  display={"flex"}
+                  onClick={() => {
+                    onClickDestination(destination);
+                  }}
+                  borderColor={"black"}
+                  borderWidth={2}
+                  justifyContent={"center"}
+                  w={24}
+                  h={24}
+                  left={destination.left}
+                  top={destination.top}
+                  borderRadius={999}
+                  backgroundColor={"#E5FFDE"}
+                  alignItems={"center"}>
+                  <Text fontSize={12}>{destination?.name}</Text>
+                  {isSelected ? (
+                    <Box
+                      position={"absolute"}
+                      left={0}
+                      right={0}
+                      top={0}
+                      bottom={0}
+                      backgroundColor={"rgba(0,0,0,0.6)"}
+                      borderRadius={999}
+                      display="flex"
+                      alignItems={"center"}
+                      justifyContent={"center"}>
+                      <CheckIcon w={8} h={8} color="green.500" />
+                    </Box>
+                  ) : null}
+                </Box>
+              );
+            })}
+          </Box>
         </Box>
         <Box
           flexDirection={"row"}
@@ -180,6 +352,14 @@ export default function Home() {
           <Button
             isDisabled={!enabledSubmitButton}
             alignSelf={"center"}
+            onClick={() => {
+              if (selectedDestination === selectedImage) {
+                setIsCorrect(true);
+              } else {
+                setIsCorrect(false);
+              }
+              onOpen();
+            }}
             colorScheme="blue">
             Submit
           </Button>
