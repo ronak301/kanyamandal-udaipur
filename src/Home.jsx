@@ -13,8 +13,31 @@ import {
 } from "@chakra-ui/react";
 import { isEmpty, map } from "lodash";
 import React from "react";
-import sample from "./assets/sample.mp3";
+
+import m2 from "./assets/music/2.mpeg";
+import m8 from "./assets/music/8.mpeg";
+import m10 from "./assets/music/10.mpeg";
+import m11 from "./assets/music/11.mpeg";
 import { CheckIcon, CheckCircleIcon } from "@chakra-ui/icons";
+
+const ALL_SONGS = [
+  {
+    id: "2",
+    song: m2,
+  },
+  {
+    id: "8",
+    song: m8,
+  },
+  {
+    id: "10",
+    song: m10,
+  },
+  {
+    id: "11",
+    song: m11,
+  },
+];
 
 export const Destinations = [
   {
@@ -32,8 +55,8 @@ export const Destinations = [
   {
     id: "3",
     name: "Badi Rawliya",
-    left: 360,
-    top: 90,
+    left: 860,
+    top: 0,
   },
   {
     id: "4",
@@ -45,7 +68,7 @@ export const Destinations = [
     id: "5",
     name: "Bidasar",
     left: 480,
-    top: 200,
+    top: 10,
   },
   {
     id: "6",
@@ -69,7 +92,7 @@ export const Destinations = [
     id: "9",
     name: "Laadnoo",
     left: 160,
-    top: 260,
+    top: 12,
   },
   {
     id: "10",
@@ -80,8 +103,8 @@ export const Destinations = [
   {
     id: "11",
     name: "SardarShahar",
-    left: 10,
-    top: 40,
+    left: 760,
+    top: 20,
   },
 ];
 
@@ -132,12 +155,12 @@ export const ALL_MUNI = [
     image: require("./assets/a9.jpeg"),
   },
   {
-    id: "9",
+    id: "10",
     label: "Acharya Mahapragya",
     image: require("./assets/a10.jpeg"),
   },
   {
-    id: "9",
+    id: "11",
     label: "Acharya Mahashraman",
     image: require("./assets/a11.jpeg"),
   },
@@ -147,6 +170,11 @@ export default function Home() {
   const [selectedImage, setSelectedImage] = React.useState(null);
   const [selectedDestination, setSelectedDestination] = React.useState(null);
   const [isCorrect, setIsCorrect] = React.useState(false);
+  const [selectedSong, setSelectedSong] = React.useState(null);
+
+  const audio = new Audio(ALL_SONGS[0]?.song);
+
+  console.log({ selectedImage, selectedSong, selectedDestination });
 
   React.useEffect(() => {
     setSelectedDestination(null);
@@ -159,8 +187,6 @@ export default function Home() {
     onOpen,
     isOpen,
   } = useDisclosure({ defaultIsOpen: false });
-
-  const sampleSong = new Audio(sample);
 
   console.log("selectedImage", selectedImage);
 
@@ -184,7 +210,6 @@ export default function Home() {
       h="100vh"
       d="flex"
       flex={1}
-      bg="#f3f3f3"
       display="flex"
       paddingLeft={32}
       backgroundColor="#E1F8FF"
@@ -220,16 +245,50 @@ export default function Home() {
           display="flex"
           justifyContent={"space-between"}
           alignItems={"center"}>
-          <Box></Box>
           <Box>
+            <Image
+              objectFit="cover"
+              src={require("./assets/logo.jpeg")}
+              w={20}
+              h={"100%"}
+              mb={8}
+              mt={8}
+            />
+          </Box>
+          <Box
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"center"}
+            ml={32}>
             <Text fontWeight={"600"} fontSize={22}>
               Connect The Correct
             </Text>
+            <Image
+              objectFit="cover"
+              src={require("./assets/music.jpg")}
+              w={200}
+              h={12}
+              mb={4}
+            />
           </Box>
           <Box>
             <Button
+              variant={"outline"}
+              mr={4}
               onClick={() => {
-                sampleSong?.play();
+                if (selectedSong?.audio.paused) {
+                  selectedSong?.audio.play();
+                } else selectedSong?.audio.pause();
+              }}
+              colorScheme="blue">
+              Play / Pause
+            </Button>
+            <Button
+              onClick={() => {
+                var randNum = Math.floor(Math.random() * 4) + 1;
+                audio.setAttribute("src", ALL_SONGS[randNum - 1]?.song);
+                audio.play();
+                setSelectedSong({ id: ALL_SONGS[randNum - 1]?.id, audio });
               }}
               colorScheme="blue">
               Play Next Song
@@ -285,7 +344,7 @@ export default function Home() {
                       display="flex"
                       alignItems={"center"}
                       justifyContent={"center"}>
-                      <CheckIcon w={8} h={8} color="green.500" />
+                      <CheckIcon w={8} h={8} color="black" />
                     </Box>
                   ) : null}
                 </Box>
@@ -343,7 +402,7 @@ export default function Home() {
                     display="flex"
                     alignItems={"center"}
                     justifyContent={"center"}>
-                    <CheckIcon w={8} h={8} color="green.500" />
+                    <CheckIcon w={8} h={8} color="black" />
                   </Box>
                 ) : null}
               </Box>
@@ -355,10 +414,24 @@ export default function Home() {
             isDisabled={!enabledSubmitButton}
             alignSelf={"center"}
             onClick={() => {
-              if (selectedDestination === selectedImage) {
+              if (
+                selectedDestination === selectedImage &&
+                selectedSong.id === selectedImage
+              ) {
                 setIsCorrect(true);
+
+                selectedSong?.audio?.pause();
+
+                setSelectedImage(null);
+                setSelectedDestination(null);
+                setSelectedSong(null);
               } else {
                 setIsCorrect(false);
+                selectedSong?.audio?.pause();
+
+                setSelectedImage(null);
+                setSelectedDestination(null);
+                setSelectedSong(null);
               }
               onOpen();
             }}
