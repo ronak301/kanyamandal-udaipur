@@ -281,17 +281,19 @@ export default function Home() {
                 } else selectedSong?.audio.pause();
               }}
               colorScheme="blue">
-              Pause
+              Pause / Play
             </Button>
             <Button
               onClick={() => {
+                selectedSong?.audio?.pause();
                 var randNum = Math.floor(Math.random() * 4) + 1;
+                console.log({ randNum });
                 audio.setAttribute("src", ALL_SONGS[randNum - 1]?.song);
                 audio.play();
                 setSelectedSong({ id: ALL_SONGS[randNum - 1]?.id, audio });
               }}
               colorScheme="blue">
-              Play Next Song
+              Play Random Song
             </Button>
           </Box>
         </Box>
