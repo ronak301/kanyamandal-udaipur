@@ -73,8 +73,8 @@ export const Destinations = [
   {
     id: "6",
     name: "Jaipur",
-    left: "70%",
-    top: 10,
+    left: "60%",
+    top: 4,
   },
   {
     id: "7",
@@ -103,8 +103,8 @@ export const Destinations = [
   {
     id: "11",
     name: "SardarShahar",
-    left: 760,
-    top: 20,
+    left: 660,
+    top: 28,
   },
 ];
 
@@ -206,14 +206,14 @@ export default function Home() {
     !isEmpty(selectedImage) && !isEmpty(selectedDestination);
   return (
     <Box
-      w="100vw"
-      h="100vh"
+      w="100%"
+      h="100%"
       d="flex"
       flex={1}
       display="flex"
-      paddingLeft={32}
-      backgroundColor="#E1F8FF"
-      paddingRight={32}>
+      paddingLeft={16}
+      paddingRight={16}
+      backgroundColor="#E1F8FF">
       {isVisible ? (
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
@@ -238,10 +238,10 @@ export default function Home() {
           </ModalContent>
         </Modal>
       ) : null}
-      <Box flexDirection={"column"}>
+      <Box flexDirection={"column"} w="100%" h="100%">
         <Box
           w="100%"
-          h={"12%"}
+          h={100}
           display="flex"
           justifyContent={"space-between"}
           alignItems={"center"}>
@@ -267,7 +267,7 @@ export default function Home() {
               objectFit="cover"
               src={require("./assets/music.jpg")}
               w={200}
-              h={12}
+              h={10}
               mb={4}
             />
           </Box>
@@ -281,7 +281,7 @@ export default function Home() {
                 } else selectedSong?.audio.pause();
               }}
               colorScheme="blue">
-              Play / Pause
+              Pause
             </Button>
             <Button
               onClick={() => {
@@ -355,6 +355,7 @@ export default function Home() {
         <Box
           flexDirection={"row"}
           justifyContent={"space-between"}
+          flexWrap={"wrap"}
           display={"flex"}
           flex={1}
           mb={4}>
@@ -367,7 +368,7 @@ export default function Home() {
                   onClickImage(muni);
                 }}
                 mr={4}
-                w={120}
+                w={"7%"}
                 p={4}
                 borderColor={"#e3e3e3"}
                 borderWidth={1}
@@ -380,13 +381,13 @@ export default function Home() {
                 <Image
                   src={muni?.image}
                   borderRadius="full"
-                  boxSize="100px"
+                  boxSize="80px"
                   mb={4}
                 />
                 <Text
                   h={12}
                   textAlign={"center"}
-                  fontSize={16}
+                  fontSize={14}
                   fontWeight={"600"}>
                   {muni?.label}
                 </Text>
@@ -411,6 +412,7 @@ export default function Home() {
         </Box>
         <Box display="flex" justifyContent={"center"}>
           <Button
+            marginBottom={2}
             isDisabled={!enabledSubmitButton}
             alignSelf={"center"}
             onClick={() => {
