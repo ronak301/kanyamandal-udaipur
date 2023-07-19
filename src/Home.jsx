@@ -32,6 +32,8 @@ import m8_1 from "./assets/music/8_1.mpeg";
 
 import { CheckCircleIcon } from "@chakra-ui/icons";
 
+const seconds = 15;
+
 const ALL_SONGS = [
   {
     id: "1",
@@ -261,7 +263,7 @@ export default function Home() {
     // If you adjust it you should also need to
     // adjust the Endtime formula we are about
     // to code next
-    setTimer("00:00:15");
+    setTimer(`00:00:${seconds}`);
 
     // If you try to remove this line the
     // updating of timer Variable will be
@@ -278,7 +280,7 @@ export default function Home() {
 
     // This is where you need to adjust if
     // you entend to add more time
-    deadline.setSeconds(deadline.getSeconds() + 15);
+    deadline.setSeconds(deadline.getSeconds() + seconds);
     return deadline;
   };
 
@@ -402,7 +404,7 @@ export default function Home() {
                 startTimerForSong();
                 setTimeout(() => {
                   audio?.pause();
-                }, 15000);
+                }, seconds * 1000);
                 setSelectedSong({ id: ALL_SONGS[randNum - 1]?.id, audio });
               }}
               colorScheme="blue">
