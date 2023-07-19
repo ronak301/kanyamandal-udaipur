@@ -14,20 +14,60 @@ import {
 import { isEmpty, map } from "lodash";
 import React from "react";
 
+import m1 from "./assets/music/1.mpeg";
 import m2 from "./assets/music/2.mpeg";
+import m3 from "./assets/music/3.mpeg";
+import m4 from "./assets/music/4.mpeg";
+import m5 from "./assets/music/5.mpeg";
+import m6 from "./assets/music/6.mpeg";
+import m7 from "./assets/music/7.mpeg";
 import m8 from "./assets/music/8.mpeg";
+import m9 from "./assets/music/9.mpeg";
 import m10 from "./assets/music/10.mpeg";
 import m11 from "./assets/music/11.mpeg";
-import { CheckIcon, CheckCircleIcon } from "@chakra-ui/icons";
+
+import m1_1 from "./assets/music/1_1.mpeg";
+import m2_1 from "./assets/music/2_1.mpeg";
+import m8_1 from "./assets/music/8_1.mpeg";
+
+import { CheckCircleIcon } from "@chakra-ui/icons";
 
 const ALL_SONGS = [
+  {
+    id: "1",
+    song: m1,
+  },
   {
     id: "2",
     song: m2,
   },
   {
+    id: "3",
+    song: m3,
+  },
+  {
+    id: "4",
+    song: m4,
+  },
+  {
+    id: "5",
+    song: m5,
+  },
+  {
+    id: "6",
+    song: m6,
+  },
+  {
+    id: "7",
+    song: m7,
+  },
+  {
     id: "8",
     song: m8,
+  },
+  {
+    id: "9",
+    song: m9,
   },
   {
     id: "10",
@@ -36,6 +76,18 @@ const ALL_SONGS = [
   {
     id: "11",
     song: m11,
+  },
+  {
+    id: "1",
+    song: m1_1,
+  },
+  {
+    id: "2",
+    song: m2_1,
+  },
+  {
+    id: "8",
+    song: m8_1,
   },
 ];
 
@@ -104,7 +156,7 @@ export const Destinations = [
     id: "11",
     name: "SardarShahar",
     left: 660,
-    top: 28,
+    top: 8,
   },
 ];
 
@@ -126,7 +178,7 @@ export const ALL_MUNI = [
   },
   {
     id: "4",
-    label: "Acharya Jeetmal",
+    label: "Acharya Jeetmal", // jayacharya ji
     image: require("./assets/a4.jpeg"),
   },
   {
@@ -171,10 +223,75 @@ export default function Home() {
   const [selectedDestination, setSelectedDestination] = React.useState(null);
   const [isCorrect, setIsCorrect] = React.useState(false);
   const [selectedSong, setSelectedSong] = React.useState(null);
+  const timerRef = React.useRef(null);
+
+  // The state for our timer
+  const [timer, setTimer] = React.useState("00:00:00");
+
+  const getTimeRemaining = (e) => {
+    const total = Date.parse(e) - Date.parse(new Date());
+    const seconds = Math.floor((total / 1000) % 60);
+    const minutes = Math.floor((total / 1000 / 60) % 60);
+    const hours = Math.floor((total / 1000 / 60 / 60) % 24);
+    return {
+      total,
+      hours,
+      minutes,
+      seconds,
+    };
+  };
+
+  const startTimer = (e) => {
+    let { total, hours, minutes, seconds } = getTimeRemaining(e);
+    if (total >= 0) {
+      // update the timer
+      // check if less than 10 then we need to
+      // add '0' at the beginning of the variable
+      setTimer(
+        (hours > 9 ? hours : "0" + hours) +
+          ":" +
+          (minutes > 9 ? minutes : "0" + minutes) +
+          ":" +
+          (seconds > 9 ? seconds : "0" + seconds)
+      );
+    }
+  };
+
+  const clearTimer = (e) => {
+    // If you adjust it you should also need to
+    // adjust the Endtime formula we are about
+    // to code next
+    setTimer("00:00:15");
+
+    // If you try to remove this line the
+    // updating of timer Variable will be
+    // after 1000ms or 1sec
+    if (timerRef.current) clearInterval(timerRef.current);
+    const id = setInterval(() => {
+      startTimer(e);
+    }, 1000);
+    timerRef.current = id;
+  };
+
+  const getDeadTime = () => {
+    let deadline = new Date();
+
+    // This is where you need to adjust if
+    // you entend to add more time
+    deadline.setSeconds(deadline.getSeconds() + 15);
+    return deadline;
+  };
+
+  // We can use useEffect so that when the component
+  // mount the timer will start as soon as possible
+
+  // We put empty array to act as componentDid
+  // mount only
+  const startTimerForSong = () => {
+    clearTimer(getDeadTime());
+  };
 
   const audio = new Audio(ALL_SONGS[0]?.song);
-
-  console.log({ selectedImage, selectedSong, selectedDestination });
 
   React.useEffect(() => {
     setSelectedDestination(null);
@@ -187,8 +304,6 @@ export default function Home() {
     onOpen,
     isOpen,
   } = useDisclosure({ defaultIsOpen: false });
-
-  console.log("selectedImage", selectedImage);
 
   const onClickImage = (muni) => {
     if (selectedImage === muni.id) {
@@ -241,7 +356,7 @@ export default function Home() {
       <Box flexDirection={"column"} w="100%" h="100%">
         <Box
           w="100%"
-          h={100}
+          h={140}
           display="flex"
           justifyContent={"space-between"}
           alignItems={"center"}>
@@ -260,6 +375,9 @@ export default function Home() {
             flexDirection={"column"}
             alignItems={"center"}
             ml={32}>
+            <Text fontWeight={"600"} fontSize={22} mt={8}>
+              Terapanth Kanyamandal Udaipur Presents
+            </Text>
             <Text fontWeight={"600"} fontSize={22}>
               Connect The Correct
             </Text>
@@ -268,28 +386,23 @@ export default function Home() {
               src={require("./assets/music.jpg")}
               w={200}
               h={10}
+              mt={0}
               mb={4}
             />
           </Box>
-          <Box>
-            <Button
-              variant={"outline"}
-              mr={4}
-              onClick={() => {
-                if (selectedSong?.audio.paused) {
-                  selectedSong?.audio.play();
-                } else selectedSong?.audio.pause();
-              }}
-              colorScheme="blue">
-              Pause / Play
-            </Button>
+          <Box display={"flex"} flexDirection={"row"} alignItems={"center"}>
+            {!selectedSong ? null : <Text mr={8}>{timer}</Text>}
             <Button
               onClick={() => {
                 selectedSong?.audio?.pause();
-                var randNum = Math.floor(Math.random() * 4) + 1;
+                var randNum = Math.floor(Math.random() * 14) + 1;
                 console.log({ randNum });
                 audio.setAttribute("src", ALL_SONGS[randNum - 1]?.song);
                 audio.play();
+                startTimerForSong();
+                setTimeout(() => {
+                  audio?.pause();
+                }, 15000);
                 setSelectedSong({ id: ALL_SONGS[randNum - 1]?.id, audio });
               }}
               colorScheme="blue">
@@ -305,13 +418,7 @@ export default function Home() {
             h="55vh"
             mb={4}
           />
-          <Box
-            position={"absolute"}
-            left={0}
-            right={0}
-            top={0}
-            bottom={0}
-            backgroundColor={"rgba(0,0,0,0.5)"}>
+          <Box position={"absolute"} left={0} right={0} top={0} bottom={0}>
             {map(Destinations, (destination) => {
               const isSelected = destination?.id === selectedDestination;
               return (
@@ -321,17 +428,13 @@ export default function Home() {
                   onClick={() => {
                     onClickDestination(destination);
                   }}
-                  borderColor={"black"}
-                  borderWidth={2}
                   justifyContent={"center"}
                   w={20}
                   h={20}
                   left={destination.left}
                   top={destination.top}
-                  borderRadius={999}
-                  backgroundColor={"#E5FFDE"}
                   alignItems={"center"}>
-                  <Text fontSize={10} fontWeight={"600"}>
+                  <Text fontSize={18} fontWeight="800">
                     {destination?.name}
                   </Text>
                   {isSelected ? (
@@ -341,13 +444,11 @@ export default function Home() {
                       right={0}
                       top={0}
                       bottom={0}
-                      backgroundColor={"rgba(0,0,0,0.6)"}
+                      backgroundColor={"rgba(0,0,0,0.3)"}
                       borderRadius={999}
                       display="flex"
                       alignItems={"center"}
-                      justifyContent={"center"}>
-                      <CheckIcon w={8} h={8} color="black" />
-                    </Box>
+                      justifyContent={"center"}></Box>
                   ) : null}
                 </Box>
               );
@@ -380,19 +481,7 @@ export default function Home() {
                 alignItems={"center"}
                 backgroundColor={"white"}
                 justifyContent={"flex-end"}>
-                <Image
-                  src={muni?.image}
-                  borderRadius="full"
-                  boxSize="80px"
-                  mb={4}
-                />
-                <Text
-                  h={12}
-                  textAlign={"center"}
-                  fontSize={14}
-                  fontWeight={"600"}>
-                  {muni?.label}
-                </Text>
+                <Image src={muni?.image} borderRadius="full" boxSize="80px" />
                 {isSelected ? (
                   <Box
                     position={"absolute"}
@@ -404,9 +493,7 @@ export default function Home() {
                     borderRadius={16}
                     display="flex"
                     alignItems={"center"}
-                    justifyContent={"center"}>
-                    <CheckIcon w={8} h={8} color="black" />
-                  </Box>
+                    justifyContent={"center"}></Box>
                 ) : null}
               </Box>
             );
