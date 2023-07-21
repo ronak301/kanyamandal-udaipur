@@ -28,7 +28,14 @@ import m11 from "./assets/music/11.mpeg";
 
 import m1_1 from "./assets/music/1_1.mpeg";
 import m2_1 from "./assets/music/2_1.mpeg";
+import m2_2 from "./assets/music/2_2.mpeg";
+import m3_1 from "./assets/music/3_1.mpeg";
+import m4_1 from "./assets/music/4_1.mpeg";
+import m7_1 from "./assets/music/7_1.mpeg";
 import m8_1 from "./assets/music/8_1.mpeg";
+import m9_1 from "./assets/music/9_1.mpeg";
+import m10_1 from "./assets/music/10_1.mpeg";
+import m11_1 from "./assets/music/11_1.mpeg";
 
 import { CheckCircleIcon } from "@chakra-ui/icons";
 
@@ -88,8 +95,36 @@ const ALL_SONGS = [
     song: m2_1,
   },
   {
+    id: "2",
+    song: m2_2,
+  },
+  {
+    id: "3",
+    song: m3_1,
+  },
+  {
+    id: "4",
+    song: m4_1,
+  },
+  {
+    id: "7",
+    song: m7_1,
+  },
+  {
     id: "8",
     song: m8_1,
+  },
+  {
+    id: "9",
+    song: m9_1,
+  },
+  {
+    id: "10",
+    song: m10_1,
+  },
+  {
+    id: "11",
+    song: m11_1,
   },
 ];
 
@@ -98,7 +133,7 @@ export const Destinations = [
     id: "1",
     name: "Kantaliya",
     left: 0,
-    top: 20,
+    top: 6,
   },
   {
     id: "2",
@@ -146,7 +181,7 @@ export const Destinations = [
     id: "9",
     name: "Laadnoo",
     left: 160,
-    top: 12,
+    top: 3,
   },
   {
     id: "10",
@@ -397,7 +432,7 @@ export default function Home() {
             <Button
               onClick={() => {
                 selectedSong?.audio?.pause();
-                var randNum = Math.floor(Math.random() * 14) + 1;
+                var randNum = Math.floor(Math.random() * 21) + 1;
                 console.log({ randNum });
                 audio.setAttribute("src", ALL_SONGS[randNum - 1]?.song);
                 audio.play();
